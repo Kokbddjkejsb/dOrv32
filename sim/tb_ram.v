@@ -1,24 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2024/12/10 22:27:19
-// Design Name: 
-// Module Name: tb_ram
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
+// Create Date: 2024/12/10 22:27:19
 
 module tb_ram;
 reg clk;
@@ -41,10 +23,6 @@ wire[7:0] data0;
 wire[7:0] data1;
 wire[7:0] data2;
 wire[7:0] data3;
-//wire[7:0] wdata0;
-//wire[7:0] wdata1;
-//wire[7:0] wdata2;
-//wire[7:0] wdata3;
 
 always begin
     re = 1;
@@ -129,11 +107,6 @@ pu_ram toram(
     .rdata_in1(data1),
     .rdata_in2(data2),
     .rdata_in3(data3)
-    //.wdata_in(data_write),
-    //.wdata_out0(data0),
-    //.wdata_out1(data1),
-    //.wdata_out2(data2),
-    //.wdata_out3(data3)
 );
 
 DataRAM ram(

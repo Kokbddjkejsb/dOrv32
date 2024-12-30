@@ -1,24 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
+ 
 // Create Date: 2024/12/08 13:54:55
-// Design Name: 
-// Module Name: pu_rom
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module pu_rom(
     input clk,
@@ -52,25 +34,3 @@ always @ (negedge clk or negedge rst) begin
 end
 
 endmodule
-
-/*
-always @ (negedge clk or negedge rst) begin
-    if (!rst) begin
-        re_out <= 1'b1;
-        cnt <= 3'h0;
-        addr_out <= 8'h00;
-        data_tmp <= 32'h00000000;
-    end else begin
-        if (cnt < 4) begin
-            addr_out = addr_in[11:0] + {10'h000,cnt};
-            data_tmp[31:24] = data_in;
-            data_tmp = data_tmp >> 8;
-            cnt = cnt + 3'h1;
-        end else begin
-            data_out <= data_tmp;
-            cnt <= 3'h0;
-            data_tmp <= 32'h00000000;
-        end
-    end
-end
-*/

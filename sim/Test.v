@@ -1,24 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2024/12/05 21:59:22
-// Design Name: 
-// Module Name: Test
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
+// Create Date: 2024/12/05 21:59:22
 
 module Test;
 
@@ -125,7 +107,7 @@ pu_ram toram(
 //0x1000-0x1040: RAM 64
 DataRAM ram(
     .re(re_ram),
-    .we(we_ram),
+    .we(we_ram_),
     .addr0(addr_ram0),
     .addr1(addr_ram1),
     .addr2(addr_ram2),
@@ -148,14 +130,8 @@ initial begin
 end
 
 initial begin
-    $readmemh("rv32ui-p-lb.mem", rom.rom);//load/store lui sra srai
-    $readmemh("data-lb.mem",ram.ram);
-    //{rom.rom[3],rom.rom[2],rom.rom[1],rom.rom[0]}=32'h800000b7;
-    //{rom.rom[7],rom.rom[6],rom.rom[5],rom.rom[4]}=32'h00100113;
-    //{rom.rom[11],rom.rom[10],rom.rom[9],rom.rom[8]}=32'h4020df33;
-    //{rom.rom[15],rom.rom[14],rom.rom[13],rom.rom[12]}=32'hc0000eb7;
-    //{rom.rom[19],rom.rom[18],rom.rom[17],rom.rom[16]}=32'h01df1063;
-    //{rom.rom[23],rom.rom[22],rom.rom[21],rom.rom[20]}=32'h00101063;
+    $readmemh("rv32ui-p-slt.mem", rom.rom);//load/store lui sra srai
+    //$readmemh("data-lb.mem",ram.ram);
 end
 
 initial begin
@@ -165,13 +141,17 @@ initial begin
         $display("rs1: [%h]%h, rs2: [%h]%h, imm data: %h, rd data: [%h]%h",
         pu.rs1_addr_ex, pu.rs1_data_ex_, pu.rs2_addr_ex, pu.rs2_data_ex_,
         pu.imm_ex, pu.rd_addr_ex, pu.rd_data_ex);
-        //$display("opc: %h, funct3: %h, funct7: %h", pu.opcode_ex, pu.funct3_ex, pu.funct7_ex);
-        //$display("j: %h, jaddr: %h", pu.jflag_alu, pu.jaddr_pc);
-        $display("e: %h/%h, width: %h, data: [%h]%h",
-        re_ram, we_ram, width_ram, addr_ram, data_ram);
-        $display("ra: %h, t5: %h; t1: %h, t4: %h; tp: %h, t0: %h",
-        pu.regs_.register[1], pu.regs_.register[30], pu.regs_.register[6],
-        pu.regs_.register[29], pu.regs_.register[4], pu.regs_.register[5]);
+        //$display("opc: %h, funct3: %h, funct7: %h", 
+        //pu.opcode_ex, pu.funct3_ex, pu.funct7_ex);
+        //$display("j: %h, jaddr: %h , b: %h", 
+        //pu.jflag_alu, pu.jaddr_pc, pu.bubble_hold);
+        $display("e: %h/%h, width: %h, data: [%h]%h(%h)",
+        re_ram, we_ram, width_ram, addr_ram, data_ram,ram.ram[addr_ram]);
+        $display("ra: %h, sp: %h; t5: %h, t4: %h",
+        pu.regs_.register[1], pu.regs_.register[2], 
+        pu.regs_.register[30], pu.regs_.register[29]);
+        //$display("tp: %h, t0: %h, t1: %h",
+        //pu.regs_.register[4], pu.regs_.register[5], pu.regs_.register[6]);
         $display("finish: %h, pass: %h\n", pu.regs_.register[26], pu.regs_.register[27]);
     end
 end

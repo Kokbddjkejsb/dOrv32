@@ -1,24 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2024/11/28 23:14:25
-// Design Name: 
-// Module Name: processor
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
+// Create Date: 2024/11/28 23:14:25
 
 module Processor_(
     input wire clk,
@@ -40,7 +22,6 @@ wire[31:0] jaddr_pc;
 wire[31:0] pc_if;
 
 wire       jump_hold;
-//wire[31:0] data_if;
 
 wire       bubble_hold;
 wire[31:0] bdata_if;
@@ -86,12 +67,8 @@ wire[4:0]  rd_addr_mem;
 wire[31:0] rd_data_mem;
 wire[31:0] rs2_data_mem;
 
-//wire[31:0] ram_addr_mem;
-//wire       ram_re_mem;
-//wire       ram_we_mem;
-//wire[1:0]  width_mem;
-//wire[31:0] rdata_mem;
-//wire[31:0] wdata_mem;
+wire[31:0] ram_addr_mem;
+wire[31:0] ram_data_mem;
 
 wire       rd_we_mem;
 wire[31:0] rd_data_mem_;//loaded
@@ -104,12 +81,8 @@ wire[4:0]  rd_addr_wb;
 wire[31:0] rd_data_wb;
 
 assign rom_addr_out = pc_if;
-//assign data_if = rom_data_in;
 
-//assign ram_re_out = ram_re_mem;
-//assign ram_we_out = ram_we_mem;
-
-//assign rdata_mem = ram_re_out ? ram_data : 32'bz;
+assign ram_data = ram_we_out ? ram_data_mem : 32'bz;
 
 pc_if pc_if_(
     .clk(clk),
@@ -222,12 +195,13 @@ control_unit cu1(
 );
 
 bubble_ cu2(
+    .clk(clk),
     .rst(rst),
 
     .opcode_in(opcode_ex),
-    .rs1_addr_in(rs1_addr_ex),
-    .rs2_addr_in(rs2_addr_ex),
-    .rd_addr_in(rd_addr_id),
+    .rd_addr_in(rd_addr_ex),
+    .rs1_addr_in(rs1_addr_id),
+    .rs2_addr_in(rs2_addr_id),
 
     .hold_pc_out(hold_pc),
     .hold_id_out(bubble_hold),
@@ -249,7 +223,7 @@ ex_mem ex_mem_(
     .funct3_in(funct3_ex),
     .rd_addr_in(rd_addr_ex),
     .rd_data_in(rd_data_ex),
-    .rs2_data_in(rs2_data_ex),
+    .rs2_data_in(rs2_data_ex_),
     .ram_addr_in(ram_addr_ex),
 
     .opcode_out(opcode_mem),
@@ -257,13 +231,14 @@ ex_mem ex_mem_(
     .rd_addr_out(rd_addr_mem),
     .rd_data_out(rd_data_mem),
     .rs2_data_out(rs2_data_mem),
-    .ram_addr_out(ram_addr_out)//
+    .ram_addr_out(ram_addr_mem)//
 );
 
 bypass_ forwarding_(
     .opcode_in(opcode_mem),
     .rd_addr_in(rd_addr_mem),
     .rd_data_in(rd_data_mem),
+    .rd_data_in2(rd_data_mem_),
 
     .rs1_addr_id(rs1_addr_id),
     .rs2_addr_id(rs2_addr_id),
@@ -276,44 +251,33 @@ bypass_ forwarding_(
     .rs2_addr_ex(rs2_addr_ex),
     .rs1_data_ex(rs1_data_ex),
     .rs2_data_ex(rs2_data_ex),
-    .rs1_alu_out(rs1_data_ex_),
-    .rs2_alu_out(rs2_data_ex_)
+    .rs1_ex_out(rs1_data_ex_),
+    .rs2_ex_out(rs2_data_ex_)
 );
 
 mem_ memdecode_(
     .opcode_in(opcode_mem),
     .funct3_in(funct3_mem),
-    .rd_data_in(rd_data_mem),
     .rs2_data_in(rs2_data_mem),
+    .ram_addr_in(ram_addr_mem),
 
     .ram_re_out(ram_re_out),
     .ram_we_out(ram_we_out),
     .ram_width_out(ram_width_out),
+    .ram_addr_out(ram_addr_out),
+    .ram_data(ram_data_mem)
+);
+
+mem2_ mem2_(
+    .opcode_in(opcode_mem),
+    .funct3_in(funct3_mem),
+    .rd_data_in(rd_data_mem),
     .ram_data(ram_data),
 
     .rd_we_out(rd_we_mem),
     .rd_data_out(rd_data_mem_)
 );
-//assign ram_re_out = ram_re_mem;
-//assign ram_we_out = ram_we_mem;
-//assign width_out = width_mem;
-//assign ram_addr_out = ram_addr_mem;
-/*
-pu_ram pu_ram_(
-    .re_in(ram_re_mem),
-    .raddr_in(ram_addr_mem),
-    .raddr_out(ram_raddr_out),
-    .rdata_in(ram_rdata_in),
-    .rdata_out(rdata_mem),
 
-    .we_in(ram_we_mem),
-    .width_in(width_mem),
-    .waddr_in(ram_addr_mem),
-    .waddr_out(ram_waddr_out),
-    .wdata_in(wdata_mem),
-    .wdata_out(ram_wdata_out)
-);
-*/
 mem_wb mem_wb_(
     .clk(clk),
     .rst(rst),

@@ -1,24 +1,6 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2024/12/10 22:27:19
-// Design Name: 
-// Module Name: tb_rom
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
+// Create Date: 2024/12/10 22:27:19
 
 module tb_rom;
 reg clk;
@@ -51,35 +33,7 @@ end
 initial begin
     $readmemh("rom1.mem", rom.rom);
 end
-/*
-initial begin
-    rom.rom[0]=0;
-    rom.rom[1]=1;
-    rom.rom[2]=2;
-    rom.rom[3]=3;
-    rom.rom[4]=4;
-    rom.rom[5]=5;
-    rom.rom[6]=6;
-    rom.rom[7]=7;
-    rom.rom[8]=8;
-    rom.rom[9]=9;
-    rom.rom[10]=10;
-    rom.rom[11]=11;
-    rom.rom[12]=12;
-    rom.rom[13]=13;
-    rom.rom[14]=14;
-    rom.rom[15]=15;
-    rom.rom[16]=16;
-    rom.rom[17]=17;
-    rom.rom[18]=18;
-    rom.rom[19]=19;
-    rom.rom[20]=20;
-    rom.rom[21]=21;
-    rom.rom[22]=22;
-    rom.rom[23]=23;
-    rom.rom[24]=24;
-end
-*/
+
 initial begin
     addr_in = 20;
     #20 addr_in = 4;
